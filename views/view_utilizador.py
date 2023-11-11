@@ -19,6 +19,7 @@ from django.http import JsonResponse
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 
+
 from django.contrib.auth.decorators import login_required
 
 from django.conf import settings
@@ -28,6 +29,7 @@ from django.utils.translation import *
 from django.contrib.auth.models import User
 
 from django.http import HttpResponseRedirect
+from contract.models import Contract 
 # from main.decorators import login_ona, seidauk_login, allowed_users
 
 
@@ -38,6 +40,8 @@ from django.http import HttpResponseRedirect
 #     request.session[settings.LANGUAGE_CODE] = user_language
 #     # I use HTTP_REFERER to direct them back to previous path 
 #     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 
 
 
@@ -54,14 +58,19 @@ def index(request):
             user = authenticate(request, username = user_input, password = password_input)
             if user is not None:
                 try:
-                    # group = user.groups.all()[0].name
-                    # print(group)
-                    # if group == "admin" : 
+                    # # group = user.groups.all()[0].name
+                    # # print(group)
+                    # # if str == "admin" : 
+                    # print(str(user.id))
+                    # print("---------")
+                    # cekkontrak = Contract.objects.get(employeeuser__user__id = user.id, is_active = True)
+                    # request.session['contract'] = cekkontrak
                     login(request, user)
                     return redirect('utilizador:painel')
                     # else :
                     #     context['message'] = 'Username ho Password lalos' 
-                except : 
+                except Exception as e : 
+                    print(e)
                     context['message'] = 'Username ho Password lalos'
             else:
                 context['message'] = 'Username ho Password lalos'
@@ -120,7 +129,7 @@ def index(request):
 def logoutuser(request):
     # d_group = request.user.groups.all()[0].name
     logout(request)
-    return redirect('utilizador:login')
+    return redirect('utilizador:index')
 
 
 # @login_ona
